@@ -1,9 +1,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
-import SavedRoutesScreen from '../screens/SavedRoutesScreen';
-import ChatScreen from '../screens/ChatScreen';
-import AccountScreen from '../screens/AccountScreen';
+import SavedRoutesScreen from '../screens/savedroutes';
+import ChatScreen from '../screens/chatscreens';
+import AccountScreen from '../screens/account';
 import { Colors } from '../theme/colors';
 
 const Tab = createBottomTabNavigator();
