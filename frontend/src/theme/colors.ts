@@ -1,4 +1,4 @@
-export const Colors = {
+export const colors = {
     yellow: '#FFF080',
     gray: '#9AADBF',
     orange: '#CF5C36',
@@ -8,5 +8,3 @@ export const Colors = {
     purple: '#635380',
     white: '#FFFFFF',
   };
-
-  

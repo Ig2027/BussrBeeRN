@@ -1,21 +1,21 @@
-import { Colors } from './colors';
+import { colors } from './colors';
 
 export const theme = {
   colors: {
-    primary: Colors.yellow,
-    secondary: Colors.orange,
-    surface: Colors.gray,
-    background: Colors.white,
-    text: Colors.brown,
-    textSecondary: Colors.gray,
+    primary: colors.yellow,
+    secondary: colors.orange,
+    surface: colors.gray,
+    background: colors.white,
+    text: colors.brown,
+    textSecondary: colors.gray,
   },
   appBar: {
-    backgroundColor: Colors.yellow,
-    textColor: Colors.brown,
+    backgroundColor: colors.yellow,
+    textColor: colors.brown,
   },
   bottomNav: {
-    backgroundColor: Colors.white,
-    selectedColor: Colors.orange,
-    unselectedColor: Colors.gray,
+    backgroundColor: colors.white,
+    selectedColor: colors.orange,
+    unselectedColor: colors.gray,
   },
 };

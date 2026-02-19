@@ -1,10 +1,10 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/HomeScreen';
+import HomeScreen from '../screens/homescreen';
 import SavedRoutesScreen from '../screens/savedroutes';
 import ChatScreen from '../screens/chatscreens';
 import AccountScreen from '../screens/account';
-import { Colors } from '../theme/colors';
+import { colors } from '../theme/colors';
 
 const Tab = createBottomTabNavigator();
 
@@ -12,15 +12,15 @@ const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: Colors.orange,
-        tabBarInactiveTintColor: Colors.gray,
+        tabBarActiveTintColor: colors.orange,
+        tabBarInactiveTintColor: colors.gray,
         tabBarStyle: {
-          backgroundColor: Colors.white,
+          backgroundColor: colors.white,
         },
         headerStyle: {
-          backgroundColor: Colors.yellow,
+          backgroundColor: colors.yellow,
         },
-        headerTintColor: Colors.brown,
+        headerTintColor: colors.brown,
       }}
     >
       <Tab.Screen 

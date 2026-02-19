@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Colors } from '../theme/colors';
+import { colors } from '../theme/colors';
 
 const AccountScreen = () => {
   return (
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.white,
+    backgroundColor: colors.white,
   },
   icon: {
     fontSize: 100,
@@ -25,12 +25,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: Colors.brown,
+    color: colors.brown,
     marginTop: 20,
   },
   subtitle: {
     fontSize: 16,
-    color: Colors.gray,
+    color: colors.gray,
     marginTop: 10,
   },
 });

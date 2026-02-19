@@ -1,15 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { theme } from '../theme/theme';
-import { Colors } from '../theme/colors';
+import { colors } from '../theme/colors';
+import MapWidget from '../widgets/map';
 
 const HomeScreen = () => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.icon}>🗺️</Text>
-      <Text style={styles.title}>Greater Seattle Map</Text>
-      <Text style={styles.subtitle}>Google Maps integration coming soon</Text>
-    </View>
+    <MapWidget />
   );
 };
 
@@ -18,7 +15,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.white,
+    backgroundColor: colors.white,
   },
   icon: {
     fontSize: 100,
@@ -26,12 +23,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: Colors.brown,
+    color: colors.brown,
     marginTop: 20,
   },
   subtitle: {
     fontSize: 16,
-    color: Colors.gray,
+    color: colors.gray,
     marginTop: 10,
   },
 });
