@@ -21,6 +21,8 @@ target 'BussrBeeRN' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  pod 'GoogleMaps'
+
   post_install do |installer|
     react_native_post_install(
       installer,

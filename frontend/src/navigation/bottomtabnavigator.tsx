@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/homescreen';
+import MapScreen from '../screens/homescreen';
 import SavedRoutesScreen from '../screens/savedroutes';
 import ChatScreen from '../screens/chatscreens';
 import AccountScreen from '../screens/account';
@@ -11,6 +11,7 @@ const Tab = createBottomTabNavigator();
 const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
+      id={undefined}
       screenOptions={{
         tabBarActiveTintColor: colors.orange,
         tabBarInactiveTintColor: colors.gray,
@@ -25,7 +26,7 @@ const BottomTabNavigator = () => {
     >
       <Tab.Screen 
         name="Map" 
-        component={HomeScreen}
+        component={MapScreen}
         options={{
           tabBarLabel: 'Map',
         }}

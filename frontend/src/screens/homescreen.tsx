@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { StyleSheet, View, ScrollView, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
-import MapView, { Polyline, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { getRoutes, getRouteDetails, getNearbyStops, getVehicles } from '../services/api';
+import MapView, { Polyline, Marker } from 'react-native-maps';
+import { getRoutes, getRouteDetails, getNearbyStops } from '../services/api';
 
 interface Route {
   id: string;
@@ -16,41 +16,31 @@ interface Stop {
   longitude: number;
 }
 
-interface Vehicle {
-  id: string;
-  latitude: number;
-  longitude: number;
-}
-
 export default function MapScreen() {
   const mapRef = useRef<MapView>(null);
   const [routes, setRoutes] = useState<Route[]>([]);
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
   const [routePolyline, setRoutePolyline] = useState<any[]>([]);
   const [stops, setStops] = useState<Stop[]>([]);
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadRoutes();
   }, []);
 
-  useEffect(() => {
-    if (selectedRoute) {
-      loadVehicles(selectedRoute);
-      const interval = setInterval(() => {
-        loadVehicles(selectedRoute);
-      }, 20000);
-      return () => clearInterval(interval);
-    }
-  }, [selectedRoute]);
-
   const loadRoutes = async () => {
     try {
       const data = await getRoutes();
-      setRoutes(data);
+      console.log('Routes data:', JSON.stringify(data).slice(0, 200));
+      const routeList = data.routes || [];
+      setRoutes(routeList.map((r: any) => ({
+        id: r.id,
+        name: r.short_name || r.long_name || 'Unknown',
+        color: r.color || '0070B9',
+      })));
     } catch (error) {
       console.error('Failed to load routes', error);
+      setRoutes([]);
     }
   };
 
@@ -58,12 +48,26 @@ export default function MapScreen() {
     setLoading(true);
     try {
       const data = await getRouteDetails(routeId);
-      setRoutePolyline(data.shape || []);
-      setStops(data.stops || []);
+
+      // Convert GeoJSON [lng, lat] to {latitude, longitude} for Polyline
+      const coords = data.geometry?.coordinates?.map((c: number[]) => ({
+        latitude: c[1],
+        longitude: c[0],
+      })) || [];
+      setRoutePolyline(coords);
+
+      // Backend sends lat/lng, component needs latitude/longitude
+      const mappedStops = (data.stops || []).map((s: any) => ({
+        id: s.id,
+        name: s.name,
+        latitude: s.lat,
+        longitude: s.lng,
+      }));
+      setStops(mappedStops);
       setSelectedRoute(routeId);
 
-      if (data.shape && data.shape.length > 0) {
-        mapRef.current?.fitToCoordinates(data.shape, {
+      if (coords.length > 0) {
+        mapRef.current?.fitToCoordinates(coords, {
           edgePadding: {top: 50, right: 50, bottom: 50, left: 50},
           animated: true,
         });
@@ -75,16 +79,7 @@ export default function MapScreen() {
     }
   };
 
-  const loadVehicles = async (routeId: string) => {
-    try {
-      const data = await getVehicles(routeId);
-      setVehicles(data);
-    } catch (error) {
-      console.error('Failed to load vehicles:', error);
-    }
-  };
-
-  const centerOnUserLocation = async () => {
+  const centerOnSeattle = async () => {
     mapRef.current?.animateToRegion({
       latitude: 47.6062,
       longitude: -122.3321,
@@ -92,8 +87,14 @@ export default function MapScreen() {
       longitudeDelta: 0.1,
     });
     try {
-      const nearbyStops = await getNearbyStops(47.6062, -122.3321);
-      console.log('Nearby Stops', nearbyStops);
+      const data = await getNearbyStops(47.6062, -122.3321);
+      const nearbyStops = (data.stops || []).map((s: any) => ({
+        id: s.id,
+        name: s.name,
+        latitude: s.lat,
+        longitude: s.lng,
+      }));
+      setStops(nearbyStops);
     } catch (error) {
       console.error('Failed to load nearby stops:', error);
     }
@@ -101,9 +102,11 @@ export default function MapScreen() {
 
   return (
     <View style={styles.container}>
+      <Text style={{position: 'absolute', top: 10, zIndex: 999, color: 'red', fontSize: 20}}>
+        Routes: {routes.length} | Stops: {stops.length}
+      </Text>
       <MapView
         ref={mapRef}
-        provider={PROVIDER_GOOGLE}
         style={styles.map}
         initialRegion={{
           latitude: 47.6062,
@@ -129,18 +132,6 @@ export default function MapScreen() {
             }}
             title={stop.name}
             pinColor="red"
-          />
-        ))}
-
-        {vehicles.map((vehicle) => (
-          <Marker
-            key={vehicle.id}
-            coordinate={{
-              latitude: vehicle.latitude,
-              longitude: vehicle.longitude,
-            }}
-            pinColor="blue"
-            title="Bus"
           />
         ))}
       </MapView>
@@ -169,10 +160,7 @@ export default function MapScreen() {
         </ScrollView>
       </View>
 
-      <TouchableOpacity
-        style={styles.locationButton}
-        onPress={centerOnUserLocation}
-      >
+      <TouchableOpacity style={styles.locationButton} onPress={centerOnSeattle}>
         <Text style={styles.locationButtonText}>📍</Text>
       </TouchableOpacity>
 
@@ -226,7 +214,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
